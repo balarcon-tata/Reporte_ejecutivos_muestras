@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Producción Especial · Órdenes T</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{--bg:#090b10;--s0:#0d1018;--s1:#121620;--s2:#181d28;--s3:#1e2433;--b0:#1f2638;--b1:#293044;--b2:#34405c;--g:#2be89a;--bl:#4d9ef5;--y:#f5c842;--r:#f05070;--pu:#9b7ef8;--tx:#d4daf0;--tx2:#7585a8;--tx3:#3e4d6c;--sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:12px}body{display:flex;flex-direction:column}::-webkit-scrollbar{width:7px;height:7px}::-webkit-scrollbar-thumb{background:var(--b1);border-radius:4px}::-webkit-scrollbar-track{background:var(--s0)}
+.hdr{height:52px;background:var(--s0);border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 18px;gap:12px;position:sticky;top:0;z-index:20}.logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--g),#00b86e);display:flex;align-items:center;justify-content:center;color:#001108;font-size:16px;box-shadow:0 0 18px rgba(43,232,154,.2)}.title{font-size:15px;font-weight:800;letter-spacing:-.3px;white-space:nowrap}.title em{color:var(--g);font-style:normal}.hdr-spacer{flex:1}
+.sb-pill{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--b0);border-radius:8px;padding:5px 10px;white-space:nowrap}.sb-dot{width:7px;height:7px;border-radius:50%;background:var(--tx3)}.sb-dot.ok{background:var(--g)}.sb-dot.err{background:var(--r)}.sb-dot.load{background:var(--y);animation:pulse 1.2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}.sb-lbl{font-size:10px;color:var(--tx2);font-weight:600}
+.btn{border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;font-family:var(--sans);display:flex;align-items:center;gap:6px}.btn-g{background:var(--g);color:#001108}.btn-g:hover{filter:brightness(1.08)}.btn-ghost{background:var(--s2);border:1px solid var(--b0);color:var(--tx2)}.btn-ghost:hover{color:var(--tx);border-color:var(--b2)}
+.wrap{padding:18px;display:flex;flex-direction:column;gap:14px}.hero{background:radial-gradient(circle at top left,rgba(43,232,154,.16),transparent 28%),radial-gradient(circle at bottom right,rgba(77,158,245,.12),transparent 32%),linear-gradient(135deg,var(--s1),var(--s0));border:1px solid var(--b1);border-radius:18px;padding:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;box-shadow:0 18px 50px rgba(0,0,0,.22)}.hero-main{flex:1;min-width:260px}.hero h1{font-size:28px;letter-spacing:-.8px;margin-bottom:8px}.hero p{color:var(--tx2);font-size:12px;line-height:1.6}.hero strong{color:var(--g)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px}.kpi{background:linear-gradient(180deg,var(--s1),var(--s0));border:1px solid var(--b1);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.18)}.kpi:before{content:'';position:absolute;left:0;top:0;right:0;height:3px;background:var(--kc,var(--g))}.kpi-l{font-size:9px;text-transform:uppercase;letter-spacing:1.1px;color:var(--tx3);font-weight:800;margin-bottom:7px}.kpi-v{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--tx)}.kpi-s{margin-top:5px;font-size:10px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar{background:var(--s0);border:1px solid var(--b0);border-radius:12px;padding:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.search{flex:1;min-width:230px;background:var(--s1);border:1px solid var(--b0);border-radius:8px;color:var(--tx);padding:8px 11px;outline:none;font-family:var(--sans);font-size:12px}.search:focus{border-color:var(--g)}.select{background:var(--s1);border:1px solid var(--b0);border-radius:8px;color:var(--tx);padding:8px 10px;outline:none;font-family:var(--sans);font-size:12px}
+.table-card{background:var(--s0);border:1px solid var(--b1);border-radius:16px;overflow:hidden;min-height:360px;box-shadow:0 18px 50px rgba(0,0,0,.18)}.table-scroll{overflow:auto;max-height:calc(100vh - 300px);min-height:360px}table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px}thead th{position:sticky;top:0;z-index:5;background:var(--s2);color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;font-size:9px;font-weight:800;text-align:left;padding:11px 12px;border-bottom:1px solid var(--b0);border-right:1px solid var(--b0);white-space:nowrap}tbody td{padding:10px 12px;border-bottom:1px solid var(--b0);border-right:1px solid var(--b0);color:var(--tx);vertical-align:middle;font-size:11px;white-space:nowrap}tbody tr:hover{background:rgba(255,255,255,.025)}.orden{font-family:var(--mono);color:var(--bl);font-weight:700}.badge{display:inline-flex;align-items:center;justify-content:center;min-width:36px;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;border:1px solid var(--b0)}.badge.estado{background:rgba(43,232,154,.1);color:var(--g);border-color:rgba(43,232,154,.25)}.badge.tipo{background:rgba(155,126,248,.12);color:var(--pu);border-color:rgba(155,126,248,.25)}.badge.qty{background:rgba(77,158,245,.12);color:var(--bl);border-color:rgba(77,158,245,.25);font-family:var(--mono)}.muted{color:var(--tx3)}
+.empty{min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--tx3);gap:10px;text-align:center;padding:40px}.empty-icon{font-size:38px}.toast{position:fixed;right:18px;bottom:18px;background:var(--s3);border:1px solid var(--b2);border-left:4px solid var(--g);border-radius:10px;padding:11px 14px;font-size:12px;color:var(--tx);box-shadow:0 10px 30px rgba(0,0,0,.45);transform:translateY(70px);opacity:0;transition:.25s;z-index:50;max-width:360px;line-height:1.4}.toast.show{transform:translateY(0);opacity:1}.toast.err{border-left-color:var(--r)}.toast.warn{border-left-color:var(--y)}
+.loading{position:fixed;inset:0;background:rgba(9,11,16,.78);display:none;align-items:center;justify-content:center;z-index:40;backdrop-filter:blur(4px)}.loading.on{display:flex}.loading-box{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:24px 30px;display:flex;align-items:center;gap:14px;color:var(--tx2);font-weight:700}.spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--b1);border-top-color:var(--g);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.footer{color:var(--tx3);font-size:10px;padding:0 4px 12px}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.hdr{height:auto;min-height:52px;flex-wrap:wrap;padding:10px 14px}}@media(max-width:560px){.kpis{grid-template-columns:1fr}.wrap{padding:12px}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="loading-box"><div class="spin"></div><span>Cargando reporte desde Supabase…</span></div></div>
+<div class="toast" id="toast"></div>
+<header class="hdr">
+  <div class="logo">📋</div><div class="title">Producción <em>Especial</em></div><div class="hdr-spacer"></div>
+  <button class="btn btn-ghost" onclick="exportCSV()">⬇ CSV</button><button class="btn btn-g" onclick="loadReport()">↻ Actualizar</button>
+  <div class="sb-pill"><div class="sb-dot" id="sbDot"></div><span class="sb-lbl" id="sbLbl">Conectando…</span></div>
+</header>
+<main class="wrap">
+  <section class="hero"><div class="hero-main"><h1>Panel de Producción · Órdenes Tipo T</h1><p>Vista ejecutiva conectada a <strong>Supabase</strong>, mostrando únicamente órdenes cuyo código inicia con <strong>T</strong>.</p></div></section>
+  <section class="kpis">
+    <div class="kpi" style="--kc:var(--g)"><div class="kpi-l">Órdenes T</div><div class="kpi-v" id="kOrdenes">0</div><div class="kpi-s">órdenes especiales</div></div>
+    <div class="kpi" style="--kc:var(--bl)"><div class="kpi-l">Cantidad total</div><div class="kpi-v" id="kCantidad">0</div><div class="kpi-s">suma de cantidades</div></div>
+    <div class="kpi" style="--kc:var(--pu)"><div class="kpi-l">Ejecutivos</div><div class="kpi-v" id="kEjecutivos">0</div><div class="kpi-s">responsables únicos</div></div>
+    <div class="kpi" style="--kc:var(--y)"><div class="kpi-l">Semana</div><div class="kpi-v" id="kSemana">—</div><div class="kpi-s">semana activa</div></div>
+  </section>
+  <section class="toolbar"><input class="search" id="search" placeholder="🔍 Buscar orden, ejecutivo, estado, tipo…" oninput="renderTable()"><select class="select" id="filterEjecutivo" onchange="renderTable()"><option value="">Todos los ejecutivos</option></select><select class="select" id="filterEstado" onchange="renderTable()"><option value="">Todos los estados</option></select></section>
+  <section class="table-card"><div class="table-scroll"><table id="reportTable"><thead><tr><th>Orden</th><th>Ejecutivo</th><th>Estilo</th><th>Cantidad</th><th>Estado</th><th>Tipo / Proyecto</th><th>EX Date</th></tr></thead><tbody id="tbody"></tbody></table><div class="empty" id="empty" style="display:none"><div class="empty-icon">📭</div><h2>Sin órdenes T</h2><p>No se encontraron órdenes que inicien con T en Supabase.</p></div></div></section>
+  <div class="footer" id="footerInfo">—</div>
+</main>
+<script>
+'use strict';
+const SUPABASE_URL='https://auclvnesasgjmwkoswwj.supabase.co';
+const SUPABASE_KEY='sb_publishable_p6MgGIEpSUHA2OG1aNLRxQ_RSh9edpZ';
+const TABLE_NAME='monday_orders';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let allRows=[],visibleRows=[],toastTimer=null;
+function showToast(msg,type='ok'){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show '+type;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3500)}
+function setStatus(state,label){document.getElementById('sbDot').className='sb-dot '+state;document.getElementById('sbLbl').textContent=label}
+function clean(v){return v===null||v===undefined||v===''?'—':String(v)}
+function num(v){const n=Number(v||0);return Number.isFinite(n)?n:0}
+function fmtDate(v){if(!v)return '—';const d=new Date(v);return !isNaN(d)?d.toLocaleDateString('es-GT',{day:'2-digit',month:'2-digit',year:'numeric'}):String(v)}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+async function loadReport(){
+  document.getElementById('loading').classList.add('on');setStatus('load','Cargando…');
+  try{
+    const {data,error}=await sb.from(TABLE_NAME).select('*').ilike('orden','T%').order('orden',{ascending:true});
+    if(error)throw error;
+    allRows=data||[];fillFilters();renderTable();setStatus('ok','Supabase conectado');showToast('✅ Reporte actualizado: '+allRows.length+' órdenes T','ok');
+  }catch(e){console.error(e);setStatus('err','Error Supabase');showToast('Error cargando reporte: '+e.message,'err')}
+  finally{document.getElementById('loading').classList.remove('on')}
+}
+function fillFilters(){
+  const ej=document.getElementById('filterEjecutivo'), es=document.getElementById('filterEstado');
+  const ce=ej.value, cs=es.value;
+  const ejecutivos=[...new Set(allRows.map(r=>clean(r.cliente)).filter(v=>v!=='—'))].sort();
+  const estados=[...new Set(allRows.map(r=>clean(r.estado)).filter(v=>v!=='—'))].sort();
+  ej.innerHTML='<option value="">Todos los ejecutivos</option>'; es.innerHTML='<option value="">Todos los estados</option>';
+  ejecutivos.forEach(v=>{const op=document.createElement('option');op.value=v;op.textContent=v;ej.appendChild(op)});
+  estados.forEach(v=>{const op=document.createElement('option');op.value=v;op.textContent=v;es.appendChild(op)});
+  if(ejecutivos.includes(ce))ej.value=ce;if(estados.includes(cs))es.value=cs;
+}
+function renderKPIs(rows){
+  const cantidad=rows.reduce((a,r)=>a+num(r.cantidad),0);
+  const ejecutivos=new Set(rows.map(r=>clean(r.cliente)).filter(v=>v!=='—'));
+  const semanas=[...new Set(rows.map(r=>clean(r.semana)).filter(v=>v!=='—'))];
+  document.getElementById('kOrdenes').textContent=rows.length.toLocaleString('es-GT');
+  document.getElementById('kCantidad').textContent=cantidad.toLocaleString('es-GT');
+  document.getElementById('kEjecutivos').textContent=ejecutivos.size.toLocaleString('es-GT');
+  document.getElementById('kSemana').textContent=semanas.length===1?semanas[0].replace('SEMANA ','S'):(semanas.length?'Multi':'—');
+}
+function renderTable(){
+  const q=document.getElementById('search').value.trim().toLowerCase(), ejecutivo=document.getElementById('filterEjecutivo').value, estado=document.getElementById('filterEstado').value;
+  visibleRows=allRows.filter(r=>{
+    if(ejecutivo&&clean(r.cliente)!==ejecutivo)return false;if(estado&&clean(r.estado)!==estado)return false;
+    if(q){const hay=[r.orden,r.cliente,r.estilo,r.cantidad,r.estado,r.tipo,r.ex_date,r.semana].map(v=>clean(v).toLowerCase()).join(' ');if(!hay.includes(q))return false}
+    return true;
+  });
+  const tbody=document.getElementById('tbody'), empty=document.getElementById('empty'), table=document.getElementById('reportTable');
+  if(!visibleRows.length){tbody.innerHTML='';table.style.display='none';empty.style.display='flex'}else{table.style.display='';empty.style.display='none';tbody.innerHTML=visibleRows.map(r=>`<tr><td><span class="orden">${esc(clean(r.orden))}</span></td><td>${esc(clean(r.cliente))}</td><td>${esc(clean(r.estilo))}</td><td><span class="badge qty">${esc(num(r.cantidad).toLocaleString('es-GT'))}</span></td><td><span class="badge estado">${esc(clean(r.estado))}</span></td><td><span class="badge tipo">${esc(clean(r.tipo))}</span></td><td>${esc(fmtDate(r.ex_date))}</td></tr>`).join('')}
+  renderKPIs(visibleRows);
+  document.getElementById('footerInfo').textContent='Mostrando '+visibleRows.length+' de '+allRows.length+' órdenes T · Última actualización visual: '+new Date().toLocaleString('es-GT');
+}
+function exportCSV(){
+  if(!visibleRows.length){showToast('No hay datos visibles para exportar.','warn');return}
+  const headers=['orden','cliente','estilo','cantidad','estado','tipo','ex_date'];const lines=[headers.join(',')];
+  visibleRows.forEach(r=>{lines.push(headers.map(h=>`"${String(r[h]??'').replace(/"/g,'""')}"`).join(','))});
+  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='reporte_ordenes_T_'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(url);
+}
+document.addEventListener('DOMContentLoaded',loadReport);
+</script>
+</body>
+</html>
